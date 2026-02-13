@@ -3,12 +3,15 @@
 import { useEffect, useState } from "react";
 import { SoftCard } from "@/components/ui/SoftCard";
 import { SoftButton } from "@/components/ui/SoftButton";
-import { getQuestions, deleteQuestion, addQuestion } from "@/lib/questions";
+import { getQuestions, deleteQuestion, addQuestion, updateQuestion } from "@/lib/questions";
 import { Question } from "@/lib/types";
+import { QuestionModal } from "@/components/admin/QuestionModal";
 
 export default function AdminDashboard() {
     const [questions, setQuestions] = useState<Question[]>([]);
     const [loading, setLoading] = useState(true);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [editingQuestion, setEditingQuestion] = useState<Question | null>(null);
 
     useEffect(() => {
         loadQuestions();
@@ -32,17 +35,30 @@ export default function AdminDashboard() {
         await loadQuestions(); // Refresh list
     }
 
-    async function handleAdd() {
-        // MVP: Add a placeholder question for now
-        // TODO: Implement full modal form
-        const newQ = {
-            order: questions.length + 1,
-            text: "New Question (Edit me)",
-            type: "text" as const,
-            placeholder: "Type here...",
-        };
-        await addQuestion(newQ);
-        await loadQuestions();
+    function handleAdd() {
+        setEditingQuestion(null);
+        setIsModalOpen(true);
+    }
+
+    function handleEdit(question: Question) {
+        setEditingQuestion(question);
+        setIsModalOpen(true);
+    }
+
+    async function handleSave(questionData: Omit<Question, "id"> & { id?: string }) {
+        try {
+            if (questionData.id) {
+                // Update existing
+                await updateQuestion(questionData.id, questionData);
+            } else {
+                // Add new
+                await addQuestion(questionData);
+            }
+            await loadQuestions();
+        } catch (error) {
+            console.error("Failed to save question", error);
+            alert("Failed to save question. See console for details.");
+        }
     }
 
     return (
@@ -65,13 +81,14 @@ export default function AdminDashboard() {
                                             {q.type}
                                         </span>
                                         <h3 className="font-semibold text-lg">{q.text}</h3>
+                                        <span className="text-xs text-gray-400">Order: {q.order}</span>
                                     </div>
                                     <p className="text-gray-500 text-sm mt-1">
                                         {q.options ? `${q.options.length} options` : "Text input"}
                                     </p>
                                 </div>
                                 <div className="flex space-x-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                                    <SoftButton size="sm" variant="secondary" onClick={() => alert("Edit feature coming soon!")}>Edit</SoftButton>
+                                    <SoftButton size="sm" variant="secondary" onClick={() => handleEdit(q)}>Edit</SoftButton>
                                     <SoftButton
                                         size="sm"
                                         variant="outline"
@@ -91,6 +108,13 @@ export default function AdminDashboard() {
                     </div>
                 )}
             </div>
+
+            <QuestionModal
+                isOpen={isModalOpen}
+                onClose={() => setIsModalOpen(false)}
+                onSave={handleSave}
+                question={editingQuestion}
+            />
         </main>
     );
 }

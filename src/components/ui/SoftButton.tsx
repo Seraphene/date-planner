@@ -16,7 +16,7 @@ export function SoftButton({
     children,
     ...props
 }: SoftButtonProps) {
-    const baseStyles = "rounded-2xl font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-pastel-pink/50 disabled:opacity-50 disabled:cursor-not-allowed";
+    const baseStyles = "relative overflow-hidden rounded-2xl font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-pastel-pink/50 disabled:opacity-50 disabled:cursor-not-allowed active:scale-95";
 
     const variants = {
         primary: "bg-pastel-pink text-white shadow-soft-pink hover:bg-opacity-90",
@@ -32,12 +32,20 @@ export function SoftButton({
 
     return (
         <motion.button
-            whileTap={{ scale: 0.95 }}
-            whileHover={{ scale: 1.02 }}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.9 }}
+            transition={{ type: "spring", stiffness: 400, damping: 10 }}
             className={cn(baseStyles, variants[variant], sizes[size], className)}
             {...props}
         >
-            {children}
+            <motion.div
+                className="absolute inset-0 bg-white/20"
+                initial={{ scale: 0, opacity: 0 }}
+                whileHover={{ scale: 1.5, opacity: 1 }}
+                transition={{ duration: 0.4 }}
+                style={{ borderRadius: "inherit" }}
+            />
+            <span className="relative z-10">{children}</span>
         </motion.button>
     );
 }
