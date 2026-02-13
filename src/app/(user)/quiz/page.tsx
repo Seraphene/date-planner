@@ -10,7 +10,7 @@ import { ProgressBar } from "@/components/ui/ProgressBar";
 import { getQuestions } from "@/lib/questions";
 import { Question } from "@/lib/types";
 import { cn } from "@/lib/utils";
-import { cardSwipe, staggerContainer, fadeInUp } from "@/lib/animations";
+import { cardSwipe, staggerContainer, fadeInUp, tiltAction, parallaxLabel } from "@/lib/animations";
 
 export default function QuizPage() {
     const router = useRouter();

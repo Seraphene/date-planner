@@ -1,10 +1,10 @@
+const path = require('path');
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
     serverExternalPackages: ['@react-pdf/renderer'],
-    experimental: {
-        turbopack: {
-            root: '.',
-        },
+    turbopack: {
+        root: path.resolve(__dirname),
     },
 };
 
