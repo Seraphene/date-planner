@@ -14,9 +14,8 @@ export default function WelcomePage() {
     const [secretCode, setSecretCode] = useState("");
     const [error, setError] = useState(false);
 
-    // Hardcoded secret for now, can be moved to env later if needed
-    // Using a simpler "love" or anniversary date as suggested
-    const SECRET = process.env.NEXT_PUBLIC_LOVE_CODE || "2024";
+    // Use the secret code from .env or fallback
+    const SECRET = process.env.NEXT_PUBLIC_SHARED_SECRET || "2024";
 
     useEffect(() => {
         const isUnlocked = localStorage.getItem("gatekeeper_unlocked");
@@ -60,8 +59,8 @@ export default function WelcomePage() {
                             value={secretCode}
                             onChange={(e) => setSecretCode(e.target.value)}
                             className={`w-full text-center text-3xl tracking-widest p-4 rounded-xl border-2 focus:outline-none transition-colors ${error
-                                    ? "border-red-300 bg-red-50 text-red-500"
-                                    : "border-gray-200 focus:border-pastel-pink focus:ring-4 focus:ring-pastel-pink/20"
+                                ? "border-red-300 bg-red-50 text-red-500"
+                                : "border-gray-200 focus:border-pastel-pink focus:ring-4 focus:ring-pastel-pink/20"
                                 }`}
                             placeholder="YYYY"
                             maxLength={4}
