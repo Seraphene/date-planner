@@ -111,14 +111,11 @@ export default function QuizPage() {
                         </motion.h2>
 
                         {/* Dynamic Question Rendering */}
-                        <div className="flex-1 flex flex-col justify-center">
-                            {/* Debug Log (Visible only in Console) */}
-                            {console.log("Current Question:", currentQuestion)}
-
+                        <div className="flex-1 flex flex-col justify-start py-8">
                             {(!currentQuestion.options || currentQuestion.options.length === 0) && currentQuestion.type !== 'text' ? (
-                                <div className="text-center p-8 bg-white rounded-3xl shadow-soft">
-                                    <p className="text-gray-500 italic">No options formulated for this question.</p>
-                                    <p className="text-sm text-pastel-pink mt-2">Check Admin Dashboard to add options!</p>
+                                <div className="text-center p-10 bg-white rounded-3xl shadow-soft">
+                                    <p className="text-gray-500 italic text-lg">No options found for this question.</p>
+                                    <p className="text-sm text-pastel-pink mt-3 font-semibold">Please check the Admin Dashboard!</p>
                                 </div>
                             ) : null}
 
@@ -127,7 +124,7 @@ export default function QuizPage() {
                                     variants={staggerContainer}
                                     initial="initial"
                                     animate="animate"
-                                    className="grid grid-cols-1 md:grid-cols-2 gap-4 h-full max-h-[60vh]"
+                                    className="grid grid-cols-1 md:grid-cols-2 gap-6 pb-20"
                                 >
                                     {currentQuestion.options?.map((opt) => (
                                         <motion.div
@@ -135,23 +132,25 @@ export default function QuizPage() {
                                             variants={fadeInUp}
                                             whileTap={{ scale: 0.95 }}
                                             whileHover={{ scale: 1.02 }}
-                                            className="relative rounded-3xl overflow-hidden shadow-soft cursor-pointer group h-64 md:h-auto"
+                                            className="relative min-h-[250px] md:min-h-[320px] rounded-[2.5rem] overflow-hidden shadow-soft-pink cursor-pointer group border-4 border-white bg-pastel-pink/20"
                                             onClick={() => handleAnswer(opt.value)}
                                         >
-                                            {/* Image Placeholder if actual image fails */}
-                                            <div className="absolute inset-0 bg-pastel-pink/20 group-hover:bg-pastel-pink/30 transition-colors" />
-
+                                            {/* Image Layer */}
                                             {opt.imageUrl && (
                                                 <div
-                                                    className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-110"
+                                                    className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110"
                                                     style={{ backgroundImage: `url(${opt.imageUrl})` }}
                                                 />
                                             )}
 
-                                            <div className="absolute inset-0 bg-black/20 flex items-center justify-center transition-opacity group-hover:bg-black/30">
-                                                <span className="text-white text-3xl font-bold drop-shadow-md text-center px-4">
+                                            {/* Content Overlay */}
+                                            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex flex-col items-center justify-center p-8 text-center transition-colors group-hover:bg-black/10">
+                                                <h3 className="text-white text-3xl md:text-4xl font-black drop-shadow-2xl uppercase tracking-tighter leading-tight mb-2">
                                                     {opt.label}
-                                                </span>
+                                                </h3>
+                                                <div className="mt-4 px-6 py-2 bg-white/10 backdrop-blur-md rounded-full text-white text-[10px] uppercase tracking-[0.2em] font-black border border-white/20 group-hover:bg-pastel-pink group-hover:border-transparent transition-all">
+                                                    Tap to Choose
+                                                </div>
                                             </div>
                                         </motion.div>
                                     ))}
@@ -163,16 +162,16 @@ export default function QuizPage() {
                                     variants={staggerContainer}
                                     initial="initial"
                                     animate="animate"
-                                    className="grid grid-cols-2 gap-4"
+                                    className="grid grid-cols-1 gap-4 pb-20"
                                 >
                                     {currentQuestion.options?.map((opt) => (
                                         <motion.div key={opt.id} variants={fadeInUp}>
                                             <SoftButton
                                                 variant="secondary"
-                                                className="w-full h-32 flex flex-col items-center justify-center space-y-2 text-xl"
+                                                className="w-full h-24 flex items-center justify-center text-xl md:text-2xl font-black shadow-soft uppercase tracking-tight"
                                                 onClick={() => handleAnswer(opt.value)}
                                             >
-                                                <span>{opt.label}</span>
+                                                {opt.label}
                                             </SoftButton>
                                         </motion.div>
                                     ))}
@@ -181,18 +180,18 @@ export default function QuizPage() {
 
                             {currentQuestion.type === 'text' && (
                                 <motion.div
-                                    initial={{ opacity: 0, scale: 0.95 }}
-                                    animate={{ opacity: 1, scale: 1 }}
-                                    transition={{ delay: 0.3 }}
+                                    variants={fadeInUp}
+                                    initial="initial"
+                                    animate="animate"
                                     className="w-full flex flex-col space-y-6"
                                 >
                                     <textarea
-                                        className="w-full h-48 rounded-3xl border-none bg-white p-6 text-lg shadow-inner focus:ring-2 focus:ring-pastel-pink/50 resize-none transition-shadow"
+                                        className="w-full h-48 rounded-3xl border-none bg-white p-6 text-xl shadow-soft focus:ring-4 focus:ring-pastel-pink/30 resize-none"
                                         placeholder={currentQuestion.placeholder}
                                         onBlur={(e) => setAnswer(currentQuestion.id, e.target.value)}
                                     />
-                                    <SoftButton onClick={handleNext} className="w-full">
-                                        Continue
+                                    <SoftButton onClick={handleNext} size="lg" className="w-full shadow-lg">
+                                        Continue ✨
                                     </SoftButton>
                                 </motion.div>
                             )}
