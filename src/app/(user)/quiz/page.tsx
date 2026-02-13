@@ -129,38 +129,40 @@ export default function QuizPage() {
                                 >
                                     {currentQuestion.options?.map((opt) => {
                                         const isSelected = session?.answers?.[currentQuestion.id] === opt.value;
-                                        <motion.div
-                                            key={opt.id}
-                                            variants={tiltAction}
-                                            initial="initial"
-                                            whileHover="whileHover"
-                                            whileTap="whileTap"
-                                            className={cn(
-                                                "relative min-h-[160px] rounded-[2.5rem] overflow-hidden shadow-pink-glow cursor-pointer transition-all duration-300 preserve-3d",
-                                                isSelected ? "border-[6px] border-pastel-pink" : "border-[4px] border-white"
-                                            )}
-                                            onClick={() => handleAnswer(opt.value)}
-                                        >
-                                            {/* Image Layer */}
-                                            {opt.imageUrl && (
-                                                <motion.div
-                                                    className="absolute inset-0 bg-cover bg-center"
-                                                    style={{ backgroundImage: `url(${opt.imageUrl})`, translateZ: -20 }}
-                                                />
-                                            )}
+                                        return (
+                                            <motion.div
+                                                key={opt.id}
+                                                variants={tiltAction}
+                                                initial="initial"
+                                                whileHover="whileHover"
+                                                whileTap="whileTap"
+                                                className={cn(
+                                                    "relative min-h-[160px] rounded-[2.5rem] overflow-hidden shadow-pink-glow cursor-pointer transition-all duration-300 preserve-3d",
+                                                    isSelected ? "border-[6px] border-pastel-pink" : "border-[4px] border-white"
+                                                )}
+                                                onClick={() => handleAnswer(opt.value)}
+                                            >
+                                                {/* Image Layer */}
+                                                {opt.imageUrl && (
+                                                    <motion.div
+                                                        className="absolute inset-0 bg-cover bg-center"
+                                                        style={{ backgroundImage: `url(${opt.imageUrl})`, translateZ: -20 }}
+                                                    />
+                                                )}
 
-                                            {/* Content Overlay - Frosted Glass Parallax */}
-                                            <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent flex flex-col items-center justify-center p-4 preserve-3d">
-                                                <motion.div
-                                                    variants={parallaxLabel}
-                                                    className="bg-white/95 backdrop-blur-md px-6 py-4 rounded-full shadow-2xl border-2 border-pastel-pink/20"
-                                                >
-                                                    <h3 className="text-charcoal-muted text-xl font-black uppercase tracking-tight">
-                                                        {opt.label}
-                                                    </h3>
-                                                </motion.div>
-                                            </div>
-                                        </motion.div>
+                                                {/* Content Overlay - Frosted Glass Parallax */}
+                                                <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent flex flex-col items-center justify-center p-4 preserve-3d">
+                                                    <motion.div
+                                                        variants={parallaxLabel}
+                                                        className="bg-white/95 backdrop-blur-md px-6 py-4 rounded-full shadow-2xl border-2 border-pastel-pink/20"
+                                                    >
+                                                        <h3 className="text-charcoal-muted text-xl font-black uppercase tracking-tight">
+                                                            {opt.label}
+                                                        </h3>
+                                                    </motion.div>
+                                                </div>
+                                            </motion.div>
+                                        );
                                     })}
                                 </motion.div>
                             )}
