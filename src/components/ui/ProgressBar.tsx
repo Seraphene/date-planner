@@ -10,19 +10,19 @@ interface ProgressBarProps {
 
 export function ProgressBar({ progress, className }: ProgressBarProps) {
     return (
-        <div className={cn("relative h-4 w-full overflow-hidden rounded-full bg-soft-gray shadow-inner", className)}>
+        <div className={cn("relative h-6 w-full overflow-hidden rounded-full bg-white/50 backdrop-blur-sm border-2 border-pastel-pink/20 shadow-inner", className)}>
             <motion.div
-                className="h-full bg-pastel-pink"
+                className="h-full bg-gradient-to-r from-pastel-pink to-[#ffb6c1] rounded-full"
                 initial={{ width: 0 }}
                 animate={{ width: `${progress}%` }}
-                transition={{ type: "spring", stiffness: 50, damping: 15 }}
+                transition={{ type: "spring", stiffness: 80, damping: 20 }}
             />
             {/* Cute icon that follows the progress */}
             <motion.div
-                className="absolute top-1/2 -ml-3 -mt-3 flex h-6 w-6 items-center justify-center text-lg"
+                className="absolute top-1/2 -ml-4 -mt-4 flex h-8 w-8 items-center justify-center text-xl drop-shadow-md z-10"
                 initial={{ left: 0 }}
                 animate={{ left: `${progress}%` }}
-                transition={{ type: "spring", stiffness: 50, damping: 15 }}
+                transition={{ type: "spring", stiffness: 80, damping: 20 }}
             >
                 ❤️
             </motion.div>

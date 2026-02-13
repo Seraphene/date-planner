@@ -2,6 +2,9 @@
 const nextConfig = {
     serverExternalPackages: ['@react-pdf/renderer'],
     experimental: {
+        turbopack: {
+            root: '.',
+        },
     },
 };
 

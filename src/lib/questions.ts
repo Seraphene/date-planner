@@ -13,7 +13,7 @@ export const MOCK_QUESTIONS: Question[] = [
         type: "binary",
         options: [
             { id: "vibe1_a", label: "City Luxury & Convenience", value: "city_luxury", imageUrl: "/images/city-luxury.jpg" },
-            { id: "vibe1_b", label: "Private Nature Hideaway", value: "nature_hideaway", imageUrl: "/images/nature-hideaway.jpg" },
+            { id: "vibe1_b", label: "Private Nature Hideaway", value: "nature_hideaway", imageUrl: "/images/nature-hideaway.jpeg" },
         ],
     },
     {

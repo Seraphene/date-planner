@@ -84,13 +84,13 @@ export default function QuizPage() {
     }
 
     return (
-        <main className="flex min-h-screen flex-col bg-soft-gray overflow-hidden">
-            {/* Top Bar */}
-            <div className="p-6 sticky top-0 bg-white/80 backdrop-blur-md z-10 border-b border-gray-100">
+        <main className="flex min-h-screen flex-col bg-cream-50 overflow-hidden font-sans">
+            {/* Top Bar - Progress */}
+            <div className="px-6 py-8 sticky top-0 bg-cream-50/90 backdrop-blur-lg z-20">
                 <ProgressBar progress={progress} />
             </div>
 
-            <div className="flex-1 flex flex-col p-6 overflow-y-auto pb-32">
+            <div className="flex-1 flex flex-col px-6">
                 <AnimatePresence mode="wait" custom={direction}>
                     <motion.div
                         key={currentQuestion.id}
@@ -99,24 +99,25 @@ export default function QuizPage() {
                         animate="animate"
                         exit="exit"
                         custom={direction}
-                        className="flex-1 flex flex-col space-y-8"
+                        className="flex-1 flex flex-col"
                     >
-                        <motion.h2
-                            initial={{ opacity: 0, y: 10 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: 0.2 }}
-                            className="text-2xl font-bold text-text-primary text-center mt-4"
+                        {/* Question Text - Standardized Top Placement */}
+                        <motion.div
+                            variants={fadeInUp}
+                            className="pt-4 pb-10"
                         >
-                            {currentQuestion.text}
-                        </motion.h2>
+                            <h2 className="text-3xl font-black text-charcoal-muted text-center leading-tight tracking-tight uppercase">
+                                {currentQuestion.text}
+                            </h2>
+                        </motion.div>
 
-                        {/* Dynamic Question Rendering */}
-                        <div className="flex-1 flex flex-col justify-start py-8">
+                        {/* Interactive Area - Thumb Zone (Centered to Bottom) */}
+                        <div className="flex-1 flex flex-col justify-end pb-32">
                             {(!currentQuestion.options || currentQuestion.options.length === 0) && currentQuestion.type !== 'text' ? (
-                                <div className="text-center p-10 bg-white rounded-3xl shadow-soft">
-                                    <p className="text-gray-500 italic text-lg">No options found for this question.</p>
-                                    <p className="text-sm text-pastel-pink mt-3 font-semibold">Please check the Admin Dashboard!</p>
-                                </div>
+                                <SoftCard className="text-center p-10 bg-white">
+                                    <p className="text-gray-500 italic text-lg font-bold">No choices here! ✨</p>
+                                    <p className="text-xs text-pastel-pink mt-4 font-black uppercase tracking-widest">Check Admin Panel</p>
+                                </SoftCard>
                             ) : null}
 
                             {currentQuestion.type === 'binary' && (
@@ -124,36 +125,43 @@ export default function QuizPage() {
                                     variants={staggerContainer}
                                     initial="initial"
                                     animate="animate"
-                                    className="grid grid-cols-1 md:grid-cols-2 gap-6 pb-20"
+                                    className="grid grid-cols-1 gap-6"
                                 >
-                                    {currentQuestion.options?.map((opt) => (
+                                    {currentQuestion.options?.map((opt) => {
+                                        const isSelected = session?.answers?.[currentQuestion.id] === opt.value;
                                         <motion.div
                                             key={opt.id}
-                                            variants={fadeInUp}
-                                            whileTap={{ scale: 0.95 }}
-                                            whileHover={{ scale: 1.02 }}
-                                            className="relative min-h-[250px] md:min-h-[320px] rounded-[2.5rem] overflow-hidden shadow-soft-pink cursor-pointer group border-4 border-white bg-pastel-pink/20"
+                                            variants={tiltAction}
+                                            initial="initial"
+                                            whileHover="whileHover"
+                                            whileTap="whileTap"
+                                            className={cn(
+                                                "relative min-h-[160px] rounded-[2.5rem] overflow-hidden shadow-pink-glow cursor-pointer transition-all duration-300 preserve-3d",
+                                                isSelected ? "border-[6px] border-pastel-pink" : "border-[4px] border-white"
+                                            )}
                                             onClick={() => handleAnswer(opt.value)}
                                         >
                                             {/* Image Layer */}
                                             {opt.imageUrl && (
-                                                <div
-                                                    className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110"
-                                                    style={{ backgroundImage: `url(${opt.imageUrl})` }}
+                                                <motion.div
+                                                    className="absolute inset-0 bg-cover bg-center"
+                                                    style={{ backgroundImage: `url(${opt.imageUrl})`, translateZ: -20 }}
                                                 />
                                             )}
 
-                                            {/* Content Overlay */}
-                                            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex flex-col items-center justify-center p-8 text-center transition-colors group-hover:bg-black/10">
-                                                <h3 className="text-white text-3xl md:text-4xl font-black drop-shadow-2xl uppercase tracking-tighter leading-tight mb-2">
-                                                    {opt.label}
-                                                </h3>
-                                                <div className="mt-4 px-6 py-2 bg-white/10 backdrop-blur-md rounded-full text-white text-[10px] uppercase tracking-[0.2em] font-black border border-white/20 group-hover:bg-pastel-pink group-hover:border-transparent transition-all">
-                                                    Tap to Choose
-                                                </div>
+                                            {/* Content Overlay - Frosted Glass Parallax */}
+                                            <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent flex flex-col items-center justify-center p-4 preserve-3d">
+                                                <motion.div
+                                                    variants={parallaxLabel}
+                                                    className="bg-white/95 backdrop-blur-md px-6 py-4 rounded-full shadow-2xl border-2 border-pastel-pink/20"
+                                                >
+                                                    <h3 className="text-charcoal-muted text-xl font-black uppercase tracking-tight">
+                                                        {opt.label}
+                                                    </h3>
+                                                </motion.div>
                                             </div>
                                         </motion.div>
-                                    ))}
+                                    })}
                                 </motion.div>
                             )}
 
@@ -162,19 +170,44 @@ export default function QuizPage() {
                                     variants={staggerContainer}
                                     initial="initial"
                                     animate="animate"
-                                    className="grid grid-cols-1 gap-4 pb-20"
+                                    className="grid grid-cols-1 gap-3"
                                 >
-                                    {currentQuestion.options?.map((opt) => (
-                                        <motion.div key={opt.id} variants={fadeInUp}>
-                                            <SoftButton
-                                                variant="secondary"
-                                                className="w-full h-24 flex items-center justify-center text-xl md:text-2xl font-black shadow-soft uppercase tracking-tight"
-                                                onClick={() => handleAnswer(opt.value)}
-                                            >
-                                                {opt.label}
-                                            </SoftButton>
-                                        </motion.div>
-                                    ))}
+                                    {currentQuestion.options?.map((opt) => {
+                                        const isSelected = session?.answers?.[currentQuestion.id] === opt.value;
+                                        return (
+                                            <motion.div key={opt.id} variants={fadeInUp}>
+                                                <motion.div
+                                                    whileTap={{ scale: 0.98 }}
+                                                    animate={{
+                                                        scale: isSelected ? [1, 1.02, 1] : 1,
+                                                        borderColor: isSelected ? "#FFD1DC" : "#ffffff"
+                                                    }}
+                                                    transition={{
+                                                        scale: { duration: 2, repeat: isSelected ? Infinity : 0, ease: "easeInOut" },
+                                                        borderColor: { duration: 0.2 }
+                                                    }}
+                                                    className={cn(
+                                                        "bg-white p-6 rounded-[2rem] border-[4px] shadow-soft cursor-pointer transition-all",
+                                                        isSelected ? "border-pastel-pink shadow-pink-glow" : "border-white hover:border-pastel-pink/30"
+                                                    )}
+                                                    onClick={() => handleAnswer(opt.value)}
+                                                >
+                                                    <div className="flex items-center justify-between">
+                                                        <span className="text-xl font-black text-charcoal-muted uppercase tracking-tight">{opt.label}</span>
+                                                        {isSelected && (
+                                                            <motion.span
+                                                                initial={{ scale: 0 }}
+                                                                animate={{ scale: 1 }}
+                                                                className="text-2xl"
+                                                            >
+                                                                ✨
+                                                            </motion.span>
+                                                        )}
+                                                    </div>
+                                                </motion.div>
+                                            </motion.div>
+                                        );
+                                    })}
                                 </motion.div>
                             )}
 
@@ -183,35 +216,42 @@ export default function QuizPage() {
                                     variants={fadeInUp}
                                     initial="initial"
                                     animate="animate"
-                                    className="w-full flex flex-col space-y-6"
+                                    className="w-full flex flex-col space-y-4"
                                 >
                                     <textarea
-                                        className="w-full h-48 rounded-3xl border-none bg-white p-6 text-xl shadow-soft focus:ring-4 focus:ring-pastel-pink/30 resize-none"
-                                        placeholder={currentQuestion.placeholder}
-                                        onBlur={(e) => setAnswer(currentQuestion.id, e.target.value)}
+                                        className="w-full h-40 rounded-[2.5rem] border-4 border-lavender bg-white p-8 text-xl font-bold text-charcoal-muted shadow-soft focus:outline-none focus:border-pastel-pink focus:ring-8 focus:ring-pastel-pink/10 resize-none transition-all placeholder:text-gray-200"
+                                        placeholder={currentQuestion.placeholder || "Tell me anything..."}
+                                        value={session?.answers?.[currentQuestion.id] || ""}
+                                        onChange={(e) => setAnswer(currentQuestion.id, e.target.value)}
                                     />
-                                    <SoftButton onClick={handleNext} size="lg" className="w-full shadow-lg">
+                                    <SoftButton onClick={handleNext} size="lg" className="w-full uppercase tracking-tighter">
                                         Continue ✨
                                     </SoftButton>
                                 </motion.div>
                             )}
                         </div>
-
                     </motion.div>
                 </AnimatePresence>
             </div>
 
-            {/* Bottom Navigation (Only show Back if not first) */}
-            {currentQuestionIndex > 0 && (
-                <div className="fixed bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-white to-transparent pointer-events-none">
-                    <div className="pointer-events-auto">
-                        <SoftButton variant="secondary" size="sm" onClick={handleBack}>
-                            Back
-                        </SoftButton>
-                    </div>
-                </div>
-            )}
+            {/* Floating Navigation Controls - Thumb Zone Left/Right Tips */}
+            <div className="fixed bottom-8 left-0 right-0 px-8 flex justify-between items-center pointer-events-none z-30">
+                {currentQuestionIndex > 0 ? (
+                    <SoftButton
+                        variant="outline"
+                        size="sm"
+                        onClick={handleBack}
+                        className="pointer-events-auto h-12 w-12 !rounded-full p-0 flex items-center justify-center"
+                    >
+                        ←
+                    </SoftButton>
+                ) : <div />}
 
+                {/* Visual indicator of current step */}
+                <div className="bg-white/80 backdrop-blur-sm px-4 py-2 rounded-full border-2 border-pastel-pink/20 text-[10px] font-black uppercase tracking-[0.2em] text-pastel-pink shadow-soft">
+                    Step {currentQuestionIndex + 1} / {questions.length}
+                </div>
+            </div>
         </main>
     );
 }

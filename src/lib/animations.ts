@@ -66,3 +66,34 @@ export const pulse = {
         },
     },
 };
+
+export const tiltAction = {
+    initial: { rotate: 0 },
+    whileHover: {
+        rotateY: 10,
+        rotateX: -5,
+        scale: 1.02,
+        transition: { type: "spring", stiffness: 300, damping: 20 }
+    },
+    whileTap: { scale: 0.98 }
+};
+
+export const parallaxLabel = {
+    initial: { z: 0 },
+    whileHover: {
+        z: 40,
+        translateZ: 40,
+        transition: { type: "spring", stiffness: 300, damping: 20 }
+    }
+};
+
+export const subtleFloat = {
+    animate: {
+        y: [0, -8, 0],
+        transition: {
+            duration: 4,
+            repeat: Infinity,
+            ease: "easeInOut",
+        },
+    },
+};

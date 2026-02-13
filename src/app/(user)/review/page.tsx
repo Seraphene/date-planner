@@ -22,7 +22,11 @@ export default function ReviewPage() {
         loadQuestions();
     }, []);
 
-    if (isSessionLoading || !session) return <div className="flex bg-white min-h-screen items-center justify-center">Loading...</div>;
+    if (isSessionLoading || !session) return (
+        <div className="flex bg-soft-gray min-h-screen items-center justify-center">
+            <div className="animate-pulse text-pastel-pink text-xl font-bold">Loading your choices...</div>
+        </div>
+    );
 
     const handleSubmit = async () => {
         setIsSubmitting(true);
@@ -49,18 +53,20 @@ export default function ReviewPage() {
     };
 
     return (
-        <main className="flex min-h-screen flex-col bg-soft-gray p-6 space-y-6 pb-32">
-            <h1 className="text-3xl font-bold text-center text-text-primary mt-4">
-                Let's double check!
-            </h1>
-            <p className="text-center text-gray-500">
-                Here's what you picked for our date.
-            </p>
+        <main className="flex min-h-screen flex-col bg-cream-50 p-6 space-y-8 pb-40">
+            <header className="space-y-3 text-center mt-8">
+                <div className="text-5xl mb-4">📝</div>
+                <h1 className="text-4xl font-black text-charcoal-muted uppercase tracking-tight">
+                    Review Time! ✨
+                </h1>
+                <p className="text-charcoal-muted/60 font-bold">
+                    Let's make sure everything is perfect.
+                </p>
+            </header>
 
-            <div className="space-y-4">
+            <div className="grid gap-4 max-w-sm mx-auto w-full">
                 {questions.map((q) => {
                     const answer = session?.answers[q.id];
-                    // Find label if possible
                     let displayAnswer = answer;
                     if (Array.isArray(answer)) {
                         displayAnswer = answer.join(", ");
@@ -68,7 +74,7 @@ export default function ReviewPage() {
 
                     if (q.options) {
                         if (Array.isArray(answer)) {
-                            // Handle array answers logic if needed
+                            // Logic remains same
                         } else {
                             const selectedOption = q.options.find(opt => opt.value === answer);
                             if (selectedOption) displayAnswer = selectedOption.label;
@@ -76,22 +82,29 @@ export default function ReviewPage() {
                     }
 
                     return (
-                        <SoftCard key={q.id} className="flex flex-col space-y-2">
-                            <span className="text-sm text-gray-400 uppercase tracking-wider font-bold">
+                        <SoftCard key={q.id} className="border-l-[6px] border-pastel-pink">
+                            <h3 className="text-[10px] text-pastel-pink uppercase tracking-[0.2em] font-black mb-2 px-1">
                                 {q.text}
-                            </span>
-                            <span className="text-xl font-medium text-pastel-pink">
-                                {displayAnswer ? displayAnswer : "Skipped"}
-                            </span>
+                            </h3>
+                            <p className="text-xl font-black text-charcoal-muted bg-cream-50/50 p-4 rounded-2xl border-2 border-white/50 shadow-inner">
+                                {displayAnswer ? displayAnswer : <span className="text-charcoal-muted/20 italic">Empty...</span>}
+                            </p>
                         </SoftCard>
                     );
                 })}
             </div>
 
-            <div className="fixed bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-white to-transparent">
-                <SoftButton disabled={isSubmitting} onClick={handleSubmit} className="w-full shadow-lg shadow-pastel-pink/30">
-                    {isSubmitting ? "Sending..." : "Send to My Love 💌"}
-                </SoftButton>
+            <div className="fixed bottom-0 left-0 right-0 p-8 bg-gradient-to-t from-cream-50 via-cream-50/90 to-transparent z-30">
+                <div className="max-w-sm mx-auto">
+                    <SoftButton
+                        disabled={isSubmitting}
+                        onClick={handleSubmit}
+                        size="lg"
+                        className="w-full h-20 text-2xl uppercase tracking-tighter"
+                    >
+                        {isSubmitting ? "Sending..." : "Send it! ❤️"}
+                    </SoftButton>
+                </div>
             </div>
         </main>
     );

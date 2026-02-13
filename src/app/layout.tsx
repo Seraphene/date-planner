@@ -1,12 +1,15 @@
-import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Nunito } from "next/font/google";
 import "./globals.css";
 
-const inter = Inter({ subsets: ["latin"] });
+const nunito = Nunito({
+    subsets: ["latin"],
+    variable: "--font-nunito",
+    weight: ["400", "500", "600", "700", "800", "900"],
+});
 
 export const metadata: Metadata = {
-    title: "Our Date Planner",
-    description: "Plan our perfect date together ❤️",
+    title: "Pastel Planner | For my Love",
+    description: "A cute little app to plan our perfect date ❤️",
 };
 
 export const viewport = {
@@ -25,8 +28,8 @@ export default function RootLayout({
     children: React.ReactNode;
 }>) {
     return (
-        <html lang="en">
-            <body className={inter.className}>
+        <html lang="en" className={nunito.variable}>
+            <body className="font-sans bg-cream-50 text-charcoal-muted antialiased overflow-x-hidden selection:bg-pastel-pink selection:text-white">
                 <QuizProvider>
                     {children}
                 </QuizProvider>

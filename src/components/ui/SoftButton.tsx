@@ -16,18 +16,18 @@ export function SoftButton({
     children,
     ...props
 }: SoftButtonProps) {
-    const baseStyles = "relative overflow-hidden rounded-2xl font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-pastel-pink/50 disabled:opacity-50 disabled:cursor-not-allowed active:scale-95";
+    const baseStyles = "relative overflow-hidden rounded-full font-bold transition-all focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed selection:bg-white/30";
 
     const variants = {
-        primary: "bg-pastel-pink text-white shadow-soft-pink hover:bg-opacity-90",
-        secondary: "bg-white text-text-primary shadow-soft hover:bg-gray-50",
-        outline: "border-2 border-pastel-pink text-pastel-pink hover:bg-pastel-pink/10",
+        primary: "bg-gradient-to-r from-pastel-pink to-[#ffb6c1] text-charcoal-muted shadow-pink-glow",
+        secondary: "bg-mint-green text-charcoal-muted shadow-soft hover:brightness-105",
+        outline: "border-[3px] border-lavender text-charcoal-muted bg-white/50 backdrop-blur-sm shadow-lavender-glow",
     };
 
     const sizes = {
-        sm: "px-4 py-2 text-sm",
-        md: "px-6 py-3 text-base min-h-[44px]", // Mobile touch target size
-        lg: "px-8 py-4 text-lg min-h-[56px]",
+        sm: "px-6 py-2 text-sm",
+        md: "px-8 py-4 text-base min-h-[50px]",
+        lg: "px-10 py-5 text-xl min-h-[64px]",
     };
 
     return (
@@ -41,11 +41,22 @@ export function SoftButton({
             <motion.div
                 className="absolute inset-0 bg-white/20"
                 initial={{ scale: 0, opacity: 0 }}
-                whileHover={{ scale: 1.5, opacity: 1 }}
-                transition={{ duration: 0.4 }}
+                whileHover={{
+                    scale: 1,
+                    opacity: 1,
+                    transition: { duration: 0.4 }
+                }}
                 style={{ borderRadius: "inherit" }}
             />
-            <span className="relative z-10">{children}</span>
+            {/* Pulsing Outer Glow */}
+            <motion.div
+                className="absolute inset-0 ring-4 ring-pastel-pink/30 rounded-full"
+                animate={{ scale: [1, 1.05, 1], opacity: [0, 0.5, 0] }}
+                transition={{ duration: 2, repeat: Infinity }}
+            />
+            <span className="relative z-10 flex items-center justify-center gap-2">
+                {children}
+            </span>
         </motion.button>
     );
 }
