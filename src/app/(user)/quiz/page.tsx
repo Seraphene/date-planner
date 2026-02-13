@@ -112,11 +112,21 @@ export default function QuizPage() {
 
                         {/* Dynamic Question Rendering */}
                         <div className="flex-1 flex flex-col justify-center">
+                            {/* Debug Log (Visible only in Console) */}
+                            {console.log("Current Question:", currentQuestion)}
+
+                            {(!currentQuestion.options || currentQuestion.options.length === 0) && currentQuestion.type !== 'text' ? (
+                                <div className="text-center p-8 bg-white rounded-3xl shadow-soft">
+                                    <p className="text-gray-500 italic">No options formulated for this question.</p>
+                                    <p className="text-sm text-pastel-pink mt-2">Check Admin Dashboard to add options!</p>
+                                </div>
+                            ) : null}
+
                             {currentQuestion.type === 'binary' && (
                                 <motion.div
                                     variants={staggerContainer}
-                                    initial="hidden"
-                                    animate="show"
+                                    initial="initial"
+                                    animate="animate"
                                     className="grid grid-cols-1 md:grid-cols-2 gap-4 h-full max-h-[60vh]"
                                 >
                                     {currentQuestion.options?.map((opt) => (
@@ -139,7 +149,7 @@ export default function QuizPage() {
                                             )}
 
                                             <div className="absolute inset-0 bg-black/20 flex items-center justify-center transition-opacity group-hover:bg-black/30">
-                                                <span className="text-white text-3xl font-bold drop-shadow-md">
+                                                <span className="text-white text-3xl font-bold drop-shadow-md text-center px-4">
                                                     {opt.label}
                                                 </span>
                                             </div>
@@ -151,8 +161,8 @@ export default function QuizPage() {
                             {currentQuestion.type === 'selection' && (
                                 <motion.div
                                     variants={staggerContainer}
-                                    initial="hidden"
-                                    animate="show"
+                                    initial="initial"
+                                    animate="animate"
                                     className="grid grid-cols-2 gap-4"
                                 >
                                     {currentQuestion.options?.map((opt) => (
@@ -179,7 +189,6 @@ export default function QuizPage() {
                                     <textarea
                                         className="w-full h-48 rounded-3xl border-none bg-white p-6 text-lg shadow-inner focus:ring-2 focus:ring-pastel-pink/50 resize-none transition-shadow"
                                         placeholder={currentQuestion.placeholder}
-                                        // defaultValue={session?.answers[currentQuestion.id] as string || ""}
                                         onBlur={(e) => setAnswer(currentQuestion.id, e.target.value)}
                                     />
                                     <SoftButton onClick={handleNext} className="w-full">
